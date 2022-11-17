@@ -19,6 +19,7 @@ def dataInsert():
         for line in data_file:
             line = line.strip()
 
+
             doc = json.loads(line)
             # if doc["type"] != "question":
             #     continue
@@ -47,6 +48,8 @@ def index_batch(docs):
         request = doc
         request["_op_type"] = "index"
         request["_index"] = INDEX_NAME
+
+        print(request)
         requests.append(request)
     bulk(client, requests)
     client.indices.update_aliases({
@@ -55,17 +58,17 @@ def index_batch(docs):
         ]
     })
 
-    def searchAll(cls, indx=None):
-        # ===============
-        # 데이터 조회 [전체]
-        # ===============
-        res = cls.es.search(
-            index="homeplus", doc_type="_doc",
-            body={
-                "query": {"match_all": {}}
-            }
-        )
-        print(json.dumps(res, ensure_ascii=False, indent=4))
+def searchAll(cls, indx=None):
+    # ===============
+    # 데이터 조회 [전체]
+    # ===============
+    res = cls.es.search(
+        index="homeplus", doc_type="_doc",
+        body={
+            "query": {"match_all": {}}
+        }
+    )
+    print(json.dumps(res, ensure_ascii=False, indent=4))
 
 def searchFilter():
     # ===============
@@ -157,11 +160,11 @@ if __name__ == '__main__':
     BATCH_SIZE = 1000
     # ElaAPI.allIndex()
     # ElaAPI.srvHealthCheck()
-    client = Elasticsearch(hosts="localhost", port=9200, http_auth=('elastic', 'dlengus'))  # 객체 생성
+    client = Elasticsearch(hosts='localhost', port='9200', http_auth=('elastic', 'dlengus'))
 
     deleteIndex()
     createIndex()
     dataInsert()
-    searchFilter()
+    # searchFilter()
     # ElaAPI.searchAll()
     # ElaAPI.searchFilter()

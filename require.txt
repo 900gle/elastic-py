@@ -1,2 +1,2 @@
-elasticsearch==7.9.1
-
+elasticsearch
+json
